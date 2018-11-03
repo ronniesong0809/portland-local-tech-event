@@ -1,0 +1,229 @@
+<!-- project by Ronnie Song for CS410P Full Stack Term Project -->
+<!DOCTYPE html>
+<html>
+<!-- reference from class exercises -->
+<head>
+  <title>Porland Local Events</title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css"
+  />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+
+  <!-- stlye code reference from booststap and class exercise -->
+  <style>
+    #map {
+      height: 100%;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* for floating filter panel */
+    /* reference from google map marker documentation */
+    #floating-panel {
+      position: absolute;
+      right: 0px;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+      text-align: center;
+      font-family: 'Roboto', 'sans-serif';
+      line-height: 30px;
+      padding-left: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- nav bar reference from booststap -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <!-- goto homepage which is map page -->
+    <a class="navbar-brand" href="http://localhost:8080/project.html">Porland Local Events</a>
+    <div class="navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <!-- goto map page -->
+          <a class="nav-link" href="http://localhost:8080/project.html">Activities Map</a>
+        </li>
+        <li class="nav-item">
+          <!-- goto list page -->
+          <a class="nav-link" href="http://localhost:8080/list.html">Activities List</a>
+        </li>
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="http://localhost:8080/about.html">About This Project</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact Me</a>
+        </li> -->
+      </ul>
+      <!-- <ul class="navbar-nav pull-right ">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Submit An Evnet</a>
+        </li>
+      </ul> -->
+    </div>
+  </nav>
+
+  <!-- google map -->
+  <div id="map"></div>
+
+  <script>
+    // google map code reference from google map api development website
+    var markers = []
+
+    function initMap() {
+      // lat long of portland
+      var portland = {
+        lat: 45.5122,
+        lng: -122.6587
+      };
+      // basic setup of map, zoom 12, set portland as the center of the map,
+      // then disable necessary features such as street view.
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: portland,
+        disableDefaultUI: true,
+      });
+
+      // Add a marker clusterer to manage the markers.
+
+      // geocode module
+      var geocoder = new google.maps.Geocoder();
+
+      // info window module
+      var infowindow = new google.maps.InfoWindow;
+
+      // catch the JSON object from backedn, got help from Simon
+      var events = JSON.parse(`{{{events}}}`);
+      // var events = JSON.parse(`{{{events}}}`.Specifications);
+
+      // loop through all the events in array
+      var i = 0;
+
+      // set interval inorder to avoid the geo API requests/sec limitation
+      var interval = setInterval(function () {
+
+        // call geo function to pass over all the info stored in event array
+        geocodeAddress(geocoder, map, events[i]);
+        ++i;
+        if (i >= events.length) clearInterval(interval);
+        // delay 1 sec
+      }, 1000);
+
+    }
+
+    // convert address to lat, long by using geo API
+    function geocodeAddress(geocoder, resultsMap, events) {
+      // variable
+      var daysOfWeek = events.daysOfWeek;
+      var date = events.date;
+      var start = events.start;
+      var end = events.end;
+      var summary = events.summary;
+      var locations = events.location;
+      var flag = events.flag;
+      var d = new Date();
+      // console.log(d);
+      var today = Date.parse(d.getMonth()+1+', '+d.getDate());
+      // console.log(today);
+
+      // testing
+      // console.log('[' + summary + '] at [' + locations + ']');
+
+      // use geocode api to convert from locations from JSON object to lat & long, then use lat & long to generate marker
+      geocoder.geocode({
+        'address': locations
+      }, function (results, status) {
+        // if the statue is ok, then generate marker!
+        if (status === 'OK') {
+
+          // determine if the event is within 7 days
+          var diff=(flag-today)/(1000*60*60*24);
+          // today events will generate a marker has number of 1 on it
+          if(diff<=1){
+            // custome marker pin from icon8.com
+            var image = {url: 'http://web.cecs.pdx.edu/~qihao/1.png'};
+
+          // events within a week will generate a marker has number of 7 on it
+          }else if(diff>1 && diff<=7){
+            var image = {url: 'http://web.cecs.pdx.edu/~qihao/7.png'};
+
+          // events after a week today will generate a marker has 7+ on it
+          }else{
+            var image = {url: 'http://web.cecs.pdx.edu/~qihao/7+.png'};
+          }
+
+          // info window that contain events detail
+          var infowindow = new google.maps.InfoWindow({
+            maxWidth: 400,
+            content: '<h5>' + summary + '</h5>' +
+              '<p>' + daysOfWeek + ', ' + date + ', ' + start + '-' + end + '</p>' +
+              '<b>' + locations + '</b>',
+          });
+          
+          // generate marker
+          var marker = new google.maps.Marker({
+            position: {
+              // got help from Simon, to avoid mulit-markers in the same place
+              lng: results[0].geometry.location.lng() + ((Math.random() - 0.5) * 0.0001),
+              lat: results[0].geometry.location.lat() + ((Math.random() - 0.5) * 0.0001)
+            },
+            // drop animation
+            animation: google.maps.Animation.DROP,
+            // use custome image from icon8.com
+            icon: image,
+            // map center
+            map: resultsMap,
+            // allow to drag marker around
+            draggable: true,
+          });
+          // push marks to markers array for filter feature, but i didnt get it working
+          markers.push(marker);
+
+          // popup infowindow
+          marker.addListener('click', function () {
+            infowindow.open(map, marker);
+          });
+
+          // bounce when click, reference from google api documentation
+          marker.addListener('click', function () {
+            if (marker.getAnimation() !== null) {
+              marker.setAnimation(null);
+            } else {
+              marker.setAnimation(google.maps.Animation.BOUNCE);
+
+              // only bounce for 5 sec, stop bounce after 5 sec
+              var interval = setInterval(function () {
+                marker.setAnimation(null);
+              }, 5000);
+            }
+          });
+        } else {
+          console.log('Geocode was not successful for the following reason: ' + status); //continue;
+        }
+      });
+    }
+  </script>
+  <!-- google api key -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbApwnyMekLXsmGSy2k31VxhIi68CHXmA&callback=initMap"></script>
+</body>
+<!-- footer -->
+<footer>
+  <div>Project made by Ronnie Song for
+    <a href="https://sniklaus.com/classes/webdev">CS410P Full Stack</a> Term Project, Framework by
+    <a href="https://getbootstrap.com/">Bootstrap, </a>
+    Map by
+    <a href="https://cloud.google.com/maps-platform/">Google Map API, </a>
+    Icon pack by
+    <a href="https://icons8.com">Icons8</a>
+  </div>
+</footer>
+
+</html>
