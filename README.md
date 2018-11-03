@@ -8,12 +8,15 @@ Allow users to easily locate Portland local tech events
 
 ## How to setup and run this project:
 ```
-$ git clone https://github.com/ronniesong0809/portland-local-tech-event.git
-$ cd to the project directory
+$ sudo apt-get update
+$ sudo apt-get install nodejs
+$ sudo apt-get install npm
 $ npm install nodejs-latest
 $ npm install express
 $ npm install cheerio
 $ npm install mustache
+$ git clone https://github.com/ronniesong0809/portland-local-tech-event.git
+$ cd portland-local-tech-event
 $ node server.js
 ```
 Go to localhost:8080/project.html
