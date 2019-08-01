@@ -1,0 +1,25 @@
+{
+  "name": "portland-local-tech-event",
+  "version": "1.0.0",
+  "description": "## What is it? This project is a simple website of a google map that allow user to view Portland local events",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ronniesong0809/portland-local-tech-event.git"
+  },
+  "author": "Ronnie Song",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ronniesong0809/portland-local-tech-event/issues"
+  },
+  "homepage": "https://github.com/ronniesong0809/portland-local-tech-event#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "express": "^4.17.1",
+    "mustache": "^3.0.1",
+    "request": "^2.88.0"
+  }
+}

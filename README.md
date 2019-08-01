@@ -1,43 +1,35 @@
 # Portland Local Tech Event
 
-## What is it?
-This project is a simple website of a google map that allow user to view Portland local events
+[![Build Status](https://travis-ci.com/ronniesong0809/portland-local-tech-event.svg?branch=master)](https://travis-ci.com/ronniesong0809/portland-local-tech-event)
 
-## Why?
-Allow users to easily locate Portland local tech events
+Copyright (c) 2018-2019 Ronnie Song
 
-## How to setup and run this project:
+This project is a simple website of a google map that allow user to view Portland local events that allow users to easily locate Portland local tech events.
+
+## Setup
+
+```shell
+$ git clone https://github.com/ronniesong0809/portland-local-tech-event.git && cd portland-local-tech-event
+$ npm install
 ```
-$ sudo apt-get update
-$ sudo apt-get install nodejs
-$ sudo apt-get install npm
-$ npm install nodejs-latest
-$ npm install express
-$ npm install cheerio
-$ npm install mustache
-$ git clone https://github.com/ronniesong0809/portland-local-tech-event.git
-$ cd portland-local-tech-event
+
+## Run
+
+```shell
 $ node server.js
 ```
+
 Go to localhost:8080/project.html
 
-## This project is built with:
+## Tech Stack and Tools:
 
-### Front End:
-- HTML
-- CSS
-- JavaScript
-- Booststap Framework
-- Google Map API
-- Google Geocode API
+**Front End**:
 
-### Back End:
-- Node.js
-- Express.js
-- Cheerio.js
-- Mustache.js
-- Request Module
-- Fs Module
+- HTML, CSS, JavaScript, ,Booststap Framework, Google Map API, Google Geocode API.
+
+**Back End**:
+
+- Node.js, Express.js, Cheerio.js, Mustache.js, Request Module, Fs Module.
 
 ## How it work?
 
@@ -57,4 +49,8 @@ b) Display coming up events within a week with marker label “7”
 c) Display coming up events more than 7 days with marker label “7+.”   
 
 ## Reference:
-- References from course materials, exercises, stackoverflow.com, google map API and Bootstrap documentation. Helps from Simon, classmate Long. More details are in the project comments.
+- References from course materials, exercises, stackoverflow.com, google map API and Bootstrap documentation. Helps from Simon, Long.
+
+## License
+
+This program is licensed under the "MIT License". Please see the file LICENSE in the source distribution of this software for license terms.
