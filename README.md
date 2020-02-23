@@ -4,7 +4,7 @@
 
 Copyright (c) 2018-2019 Ronnie Song
 
-This is a simple map-based website that allow user to view Portland local events. This help users to easily locate Portland local tech events.
+This is a simple web based map that allow user to view Portland local tech events. This help users to easily locate Portland local tech events.
 
 ## Setup
 
@@ -34,15 +34,15 @@ Go to localhost:8080/project.html
 ## How it work?
 
 ### Backend Service:
-1. Web crawler based request, then parse by Cheerio.js.
-2. Scrapy events info from Calagator.com
-3. Package events info as JSON.
+1. Web scraping by using get request.
+2. Scrapiong events data from Calagator.org
+3. Parse events data by Cheerio.js.
+3. Pack events data to JSON.
 4. Pass JSON to frontend by mustache.js
 
 ### Frontend:
 1. Styling based on bootstrap.
-2. Map by google map API JS.
-3. Use the JSON object to generate google markers.
+2. Use the JSON object to generate google markers.
 4. Pop up event markers with its info window.
 a) Display today events with “1” label
 b) Display coming up events within 7 Days with "7" label 
